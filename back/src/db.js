@@ -11,8 +11,14 @@ const sequelize = new Sequelize(
     native: false,
   }
 );
-
 const basename = path.basename(__filename);
+
+try {
+  sequelize.authenticate();
+  console.log("Connection has been established successfully.");
+} catch (error) {
+  console.error("Unable to connect to the database:", error);
+}
 
 const modelDefiners = [];
 
@@ -26,7 +32,6 @@ fs.readdirSync(path.join(__dirname, "/models"))
   });
 
 modelDefiners.forEach((model) => model(sequelize));
-
 let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [
   entry[0][0].toUpperCase() + entry[0].slice(1),
@@ -34,22 +39,24 @@ let capsEntries = entries.map((entry) => [
 ]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { Product, Category, Order, User, OrderLines, Review } = sequelize.models;
+const { Product, Category, Order, User } = sequelize.models;
+Product.belongsToMany(Category, { through: "productCategory" });
+Category.belongsToMany(Product, { through: "productCategory" });
 
-Product.belongsToMany(Category);
-Category.belongsToMany(Product);
-
-Order.belongsToMany(Product, { through: "OrderLines" });
-Product.belongsToMany(Order, { through: "OrderLines" });
-
-User.hasMany(Order);
 Order.belongsTo(User);
+User.hasMany(Order);
 
-Product.hasMany(Review);
-Review.belongsTo(Product);
+//Order.belongsToMany(Product, { through: "OrderLines" });
+//Product.belongsToMany(Order, { through: "OrderLines" });
 
-User.hasMany(Review);
-Review.belongsTo(User);
+//User.hasMany(Order);
+//Order.belongsTo(User);
+
+//Product.hasMany(Review);
+//Review.belongsTo(Product);
+
+//User.hasMany(Review);
+//Review.belongsTo(User);
 
 module.exports = {
   ...sequelize.models,

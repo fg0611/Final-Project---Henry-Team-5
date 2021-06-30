@@ -1,5 +1,4 @@
 const { Category, Product, Review, User } = require("../db");
-const { productCategory } = require("../helpers/utils");
 //const { Op } = require("sequelize");
 
 async function getProducts(req, res, next) {
