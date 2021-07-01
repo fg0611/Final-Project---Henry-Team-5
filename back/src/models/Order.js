@@ -10,18 +10,13 @@ module.exports = (sequelize) => {
         primaryKey: true,
       },
       orderState: {
-        type: DataTypes.ENUM(
-          "processing",
-          "cancelled",
-          "completed",
-          "cart"
-        ),
+        type: DataTypes.ENUM("cart", "processing", "cancelled", "completed"),
         defaultValue: "cart",
         allowNull: true,
       },
       shippingState: {
         type: DataTypes.ENUM(
-          "initial",
+          "initial", //appears as soon as payment is verified
           "created",
           "processing",
           "cancelled",
@@ -31,5 +26,7 @@ module.exports = (sequelize) => {
       },
     },
     { timestamps: false }
+    // createdAT does not appear
+    // updateAT does not appear
   );
 };
