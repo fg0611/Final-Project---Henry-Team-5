@@ -19,5 +19,3 @@ module.exports = (sequelize) => {
     { timestamps: false }
   );
 };
-
-//uuid product | uuid orden | price |
